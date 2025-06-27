@@ -13,6 +13,9 @@ An easy to use, fully browser-side image resizer perfect for creating Instagram 
 - 📱 **Responsive Design** - Works perfectly on mobile and desktop
 
 
+🌐 **[Try it on GitHub Pages](https://romancow.github.io/img-resizer/)**
+
+
 ## 🔄 Creating Releases
 
 This project uses GitHub Actions to automatically create draft releases when version tags are pushed:
@@ -28,6 +31,11 @@ The workflow will:
 - 📦 Generate a source code zip archive
 - 🗃️ Create a standalone HTML file with inlined CSS/JS
 - 📋 Include detailed release notes with features and usage instructions
+
+When you publish the release, it will automatically:
+- 🌐 Deploy the latest version to GitHub Pages
+- 🔄 Update the live demo at https://romancow.github.io/img-resizer/
+
 
 ## 🛠️ Development
 
