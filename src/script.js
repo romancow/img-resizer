@@ -244,34 +244,69 @@ class ImageResizer {
 			rect.setAttribute('fill', 'url(#imagePattern)');
 		}
 		
-		// Update dimensions info
-		const targetWidth = 800; // Standard output size
-		const targetHeight = Math.round((targetWidth * ratio.height) / ratio.width);
+		// Calculate target dimensions based on original image
+		const { targetWidth, targetHeight } = this.calculateTargetDimensions();
 		
 		document.getElementById('dimensionsInfo').textContent = 
 			`Output dimensions: ${targetWidth} × ${targetHeight} pixels (${this.currentSettings.size} ${ratio.width}:${ratio.height})`;
 	}
 	
+	calculateTargetDimensions() {
+		if (!this.originalImage) return { targetWidth: 800, targetHeight: 800 };
+		
+		const ratio = this.sizeRatios[this.currentSettings.size];
+		const originalWidth = this.originalImage.width;
+		const originalHeight = this.originalImage.height;
+		const originalAspect = originalWidth / originalHeight;
+		const targetAspect = ratio.width / ratio.height;
+		
+		let targetWidth, targetHeight;
+		
+		if (this.currentSettings.fit === 'fit') {
+			// Fit mode: use dimensions that ensure entire image fits
+			if (originalAspect > targetAspect) {
+				// Original is wider than target ratio, constrain by width
+				targetWidth = originalWidth;
+				targetHeight = Math.round(originalWidth / targetAspect);
+			} else {
+				// Original is taller than target ratio, constrain by height
+				targetHeight = originalHeight;
+				targetWidth = Math.round(originalHeight * targetAspect);
+			}
+		} else {
+			// Fill mode: use dimensions that ensure image fills completely (will be cropped)
+			if (originalAspect > targetAspect) {
+				// Original is wider than target ratio, constrain by height
+				targetHeight = originalHeight;
+				targetWidth = Math.round(originalHeight * targetAspect);
+			} else {
+				// Original is taller than target ratio, constrain by width
+				targetWidth = originalWidth;
+				targetHeight = Math.round(originalWidth / targetAspect);
+			}
+		}
+		
+		return { targetWidth, targetHeight };
+	}
+	
 	saveImage() {
 		if (!this.originalImage) return;
 		
-		const ratio = this.sizeRatios[this.currentSettings.size];
-		const outputWidth = 800; // You can make this configurable
-		const outputHeight = Math.round((outputWidth * ratio.height) / ratio.width);
+		const { targetWidth, targetHeight } = this.calculateTargetDimensions();
 		
 		// Set canvas dimensions
-		this.canvas.width = outputWidth;
-		this.canvas.height = outputHeight;
+		this.canvas.width = targetWidth;
+		this.canvas.height = targetHeight;
 		
 		// Clear canvas
-		this.ctx.clearRect(0, 0, outputWidth, outputHeight);
+		this.ctx.clearRect(0, 0, targetWidth, targetHeight);
 		
 		if (this.currentSettings.fit === 'fill') {
 			// Fill mode: crop and fill entire canvas
-			this.drawFillMode(outputWidth, outputHeight);
+			this.drawFillMode(targetWidth, targetHeight);
 		} else {
 			// Fit mode: show entire image with background
-			this.drawFitMode(outputWidth, outputHeight);
+			this.drawFitMode(targetWidth, targetHeight);
 		}
 		
 		// Convert to desired format and download
