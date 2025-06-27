@@ -55,8 +55,6 @@ jobs:
         run: |
           # Create release body
           cat > release-body.md << 'EOF'
-          # Image Resizer ${{ steps.version.outputs.version }}
-          
           A browser-based image resizing tool
           
           ${{ steps.changelog.outputs.changelog }}
