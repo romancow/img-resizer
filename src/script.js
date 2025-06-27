@@ -5,7 +5,7 @@ class ImageResizer {
 		this.ctx = null;
 		this.currentSettings = {
 			size: 'square',
-			fit: 'fill',
+			fit: 'fit',
 			bgColor: '#000000',
 			format: 'png'
 		};
