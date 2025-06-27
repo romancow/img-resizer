@@ -1,6 +1,7 @@
 class ImageResizer {
 	constructor() {
 		this.originalImage = null;
+		this.originalFileName = null;
 		this.canvas = null;
 		this.ctx = null;
 		this.currentSettings = {
@@ -106,6 +107,9 @@ class ImageResizer {
 			alert('Please select a valid image file.');
 			return;
 		}
+		
+		// Store the original filename without extension
+		this.originalFileName = file.name.replace(/\.[^/.]+$/, "");
 		
 		const reader = new FileReader();
 		reader.onload = (e) => {
@@ -317,7 +321,11 @@ class ImageResizer {
 			const url = URL.createObjectURL(blob);
 			const a = document.createElement('a');
 			a.href = url;
-			a.download = `resized-image-${this.currentSettings.size}.${this.currentSettings.format}`;
+			
+			// Create filename based on original name and settings
+			const baseFileName = this.originalFileName || 'resized-image';
+			a.download = `${baseFileName}-${this.currentSettings.size}.${this.currentSettings.format}`;
+			
 			document.body.appendChild(a);
 			a.click();
 			document.body.removeChild(a);
