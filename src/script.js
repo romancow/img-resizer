@@ -13,8 +13,10 @@ class ImageResizer {
 		
 		this.sizeRatios = {
 			square: { width: 1, height: 1 },
-			portrait: { width: 3, height: 4 },
-			landscape: { width: 4, height: 3 }
+			portrait: { width: 4, height: 5 },
+			portrait34: { width: 3, height: 4 },
+			landscape: { width: 1.91, height: 1 },
+			landscape43: { width: 4, height: 3 }
 		};
 		
 		this.init();
