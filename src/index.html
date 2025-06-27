@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Image Resizer</title>
+	<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+	<div class="container">
+		<header>
+			<h1>Image Resizer</h1>
+			<p>Drop an image to resize it to different dimensions</p>
+		</header>
+
+		<main>
+			<!-- Upload Area -->
+			<div class="upload-section">
+				<div id="dropZone" class="drop-zone">
+					<div class="drop-zone-content">
+						<svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+							<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+							<polyline points="7,10 12,15 17,10"></polyline>
+							<line x1="12" y1="15" x2="12" y2="3"></line>
+						</svg>
+						<p>Drop an image here or click to browse</p>
+						<p class="file-types">Supports JPG, PNG, WebP</p>
+					</div>
+					<input type="file" id="fileInput" accept="image/*" hidden>
+				</div>
+			</div>
+
+			<!-- Controls Section -->
+			<div class="controls-section" id="controlsSection" style="display: none;">
+				<div class="controls-grid">
+					<!-- Size Options -->
+					<div class="control-group">
+						<h3>Size</h3>
+						<div class="radio-group">
+							<label>
+								<input type="radio" name="size" value="square" checked>
+								<span>Square (1:1)</span>
+							</label>
+							<label>
+								<input type="radio" name="size" value="portrait">
+								<span>Portrait (3:4)</span>
+							</label>
+							<label>
+								<input type="radio" name="size" value="landscape">
+								<span>Landscape (4:3)</span>
+							</label>
+						</div>
+					</div>
+
+					<!-- Fit Options -->
+					<div class="control-group">
+						<h3>Fit</h3>
+						<div class="radio-group">
+							<label>
+								<input type="radio" name="fit" value="fill" checked>
+								<span>Fill (crop to fit)</span>
+							</label>
+							<label>
+								<input type="radio" name="fit" value="fit">
+								<span>Fit (show entire image)</span>
+							</label>
+						</div>
+					</div>
+
+					<!-- Background Color -->
+					<div class="control-group">
+						<h3>Background Color</h3>
+						<div class="color-picker-group">
+							<input type="color" id="bgColor" value="#000000">
+							<label for="bgColor">Choose background color</label>
+						</div>
+					</div>
+
+					<!-- Output Format -->
+					<div class="control-group">
+						<h3>Output Format</h3>
+						<select id="outputFormat">
+							<option value="png">PNG</option>
+							<option value="jpeg">JPEG</option>
+							<option value="webp">WebP</option>
+						</select>
+					</div>
+				</div>
+			</div>
+
+			<!-- Preview Section -->
+			<div class="preview-section" id="previewSection" style="display: none;">
+				<h3>Preview</h3>
+				<div class="preview-container">
+					<svg id="previewSvg" class="preview-svg">
+						<defs>
+							<pattern id="imagePattern" patternUnits="userSpaceOnUse">
+								<image id="patternImage" preserveAspectRatio="xMidYMid slice" />
+							</pattern>
+						</defs>
+						<rect id="previewRect" width="100%" height="100%" />
+					</svg>
+				</div>
+				<div class="dimensions-info" id="dimensionsInfo"></div>
+			</div>
+
+			<!-- Save Section -->
+			<div class="save-section" id="saveSection" style="display: none;">
+				<button id="saveButton" class="save-button">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+						<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+						<polyline points="17,8 12,13 7,8"></polyline>
+						<line x1="12" y1="13" x2="12" y2="2"></line>
+					</svg>
+					Save Image
+				</button>
+			</div>
+		</main>
+	</div>
+
+	<script src="script.js"></script>
+</body>
+</html>
