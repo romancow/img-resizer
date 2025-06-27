@@ -157,25 +157,42 @@ class ImageResizer {
 			const imageAspect = this.originalImage.width / this.originalImage.height;
 			const targetAspect = ratio.width / ratio.height;
 			
-			let patternWidth, patternHeight;
+			// Pattern should always fill the entire SVG area
+			pattern.setAttribute('width', svgWidth);
+			pattern.setAttribute('height', svgHeight);
+			pattern.setAttribute('x', 0);
+			pattern.setAttribute('y', 0);
+			
+			// Calculate image dimensions to fill the pattern area
+			let imageWidth, imageHeight, imageX, imageY;
 			if (imageAspect > targetAspect) {
-				// Image is wider than target, fit by height
-				patternHeight = svgHeight;
-				patternWidth = (svgHeight * imageAspect);
+				// Image is wider than target, fit by height and crop sides
+				imageHeight = svgHeight;
+				imageWidth = svgHeight * imageAspect;
+				imageX = (svgWidth - imageWidth) / 2;
+				imageY = 0;
 			} else {
-				// Image is taller than target, fit by width
-				patternWidth = svgWidth;
-				patternHeight = (svgWidth / imageAspect);
+				// Image is taller than target, fit by width and crop top/bottom
+				imageWidth = svgWidth;
+				imageHeight = svgWidth / imageAspect;
+				imageX = 0;
+				imageY = (svgHeight - imageHeight) / 2;
 			}
 			
-			pattern.setAttribute('width', patternWidth);
-			pattern.setAttribute('height', patternHeight);
-			pattern.setAttribute('x', (svgWidth - patternWidth) / 2);
-			pattern.setAttribute('y', (svgHeight - patternHeight) / 2);
+			// Clear any existing pattern content and rebuild
+			while (pattern.firstChild) {
+				pattern.removeChild(pattern.firstChild);
+			}
 			
-			patternImage.setAttribute('width', patternWidth);
-			patternImage.setAttribute('height', patternHeight);
-			patternImage.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+			// Add the image to the pattern
+			const imageElement = document.createElementNS('http://www.w3.org/2000/svg', 'image');
+			imageElement.setAttribute('x', imageX);
+			imageElement.setAttribute('y', imageY);
+			imageElement.setAttribute('width', imageWidth);
+			imageElement.setAttribute('height', imageHeight);
+			imageElement.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+			imageElement.setAttributeNS('http://www.w3.org/1999/xlink', 'href', this.originalImage.src);
+			pattern.appendChild(imageElement);
 			
 			rect.setAttribute('fill', 'url(#imagePattern)');
 		} else {
@@ -225,11 +242,6 @@ class ImageResizer {
 			pattern.appendChild(imageElement);
 			
 			rect.setAttribute('fill', 'url(#imagePattern)');
-		}
-		
-		// Set the image source for fill mode
-		if (this.currentSettings.fit === 'fill') {
-			patternImage.setAttributeNS('http://www.w3.org/1999/xlink', 'href', this.originalImage.src);
 		}
 		
 		// Update dimensions info
