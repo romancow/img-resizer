@@ -8,7 +8,8 @@ class ImageResizer {
 			size: 'square',
 			fit: 'fit',
 			bgColor: '#000000',
-			format: 'png'
+			format: 'png',
+			jpegQuality: 0.9
 		};
 		
 		this.sizeRatios = {
@@ -49,6 +50,7 @@ class ImageResizer {
 		
 		document.getElementById('bgColor').addEventListener('change', this.handleBgColorChange.bind(this));
 		document.getElementById('outputFormat').addEventListener('change', this.handleFormatChange.bind(this));
+		document.getElementById('jpegQuality').addEventListener('input', this.handleQualityChange.bind(this));
 		
 		// Save button
 		document.getElementById('saveButton').addEventListener('click', this.saveImage.bind(this));
@@ -102,6 +104,22 @@ class ImageResizer {
 	
 	handleFormatChange(e) {
 		this.currentSettings.format = e.target.value;
+		this.toggleQualitySlider();
+	}
+	
+	handleQualityChange(e) {
+		const quality = parseInt(e.target.value);
+		this.currentSettings.jpegQuality = quality / 100;
+		document.getElementById('qualityValue').textContent = quality;
+	}
+	
+	toggleQualitySlider() {
+		const qualitySlider = document.getElementById('qualitySlider');
+		if (this.currentSettings.format === 'jpeg') {
+			qualitySlider.style.display = 'block';
+		} else {
+			qualitySlider.style.display = 'none';
+		}
 	}
 	
 	loadImage(file) {
@@ -316,7 +334,7 @@ class ImageResizer {
 		}
 		
 		// Convert to desired format and download
-		const quality = this.currentSettings.format === 'jpeg' ? 0.9 : undefined;
+		const quality = this.currentSettings.format === 'jpeg' ? this.currentSettings.jpegQuality : undefined;
 		const mimeType = `image/${this.currentSettings.format}`;
 		
 		this.canvas.toBlob((blob) => {
