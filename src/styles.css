@@ -79,6 +79,20 @@ header p {
 
 main {
 	padding: 40px;
+	padding-top: 20px;
+}
+
+/* Privacy Note */
+.privacy-note {
+	font-size: 0.9rem;
+	margin: 0 0 20px 0;
+	padding: 0 16px;
+	color: #6b7280;
+	text-align: center;
+	font-weight: 500;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 /* Upload Section */
